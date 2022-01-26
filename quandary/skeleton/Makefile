@@ -1,7 +1,8 @@
 
 SOURCES = $(wildcard */*.java)
 CLASSES = $(SOURCES:.java=.class) parser/Lexer.class parser/sym.class parser/Parser.class
-
+JFLEX_DIR = /home/lucas/jflex-1.7.0
+CUP_DIR= /home/lucas/cup
 default: parser/Lexer.java parser/Parser.java $(CLASSES)
 
 parser/Lexer.java: parser/Scanner.jflex

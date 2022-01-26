@@ -4,6 +4,7 @@ public class BinaryExpr extends Expr {
 
     public static final int PLUS = 1;
     public static final int MINUS = 2;
+    public static final int TIMES = 3;
 
     final Expr expr1;
     final int operator;
@@ -24,8 +25,15 @@ public class BinaryExpr extends Expr {
     public String simpleString() {
         String s = null;
         switch (operator) {
-            case PLUS:  s = "+"; break;
-            case MINUS: s = "-"; break;
+            case PLUS:
+                s = "+";
+                break;
+            case MINUS:
+                s = "-";
+                break;
+            case TIMES:
+                s = "*";
+                break;
         }
         return expr1 + " " + s + " " + expr2;
     }
@@ -37,8 +45,13 @@ public class BinaryExpr extends Expr {
 
     static Object doOperation(Object value1, int operator, Object value2) {
         switch (operator) {
-            case PLUS:  return (long)value1 + (long)value2;
-            case MINUS: return (long)value1 - (long)value2;
+            case PLUS:
+                return (long) value1 + (long) value2;
+            case MINUS:
+                return (long) value1 - (long) value2;
+            case TIMES:
+                return (long) value1 * (long) value2;
+
         }
         throw new RuntimeException("Unexpected in BinaryExpr.doOperation");
     }
