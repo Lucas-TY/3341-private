@@ -27,30 +27,98 @@ parser code {:
 
 :};
 
-terminal PLUS, MINUS, LPAREN, RPAREN,TIMES,UMINUS,RETURN,SEMICOLON;
+terminal PLUS, MINUS, LPAREN, RPAREN,TIMES,UMINUS,RETURN,SEMICOLON,LCURLY,RCURLY,INT,PRINT,EQUALS,ELARGER,ESMALLER,EQUAL,NOTEQAUL,LARGER,SMALLER,IF,ELSE,AND,OR,EXCLAMATION;
 terminal Long    INTCONST;
+terminal String IDENT;
 
 non terminal Program         program;
 non terminal Expr            expr;
 non terminal BinaryExpr      binaryExpr;
+non terminal Stmtlist        stmtList;
+non terminal Stmt            stmt;
+non terminal Cond            cond;
+non terminal OperationCond            operationCond;
 
+
+precedence left RETURN;
 precedence left PLUS, MINUS;
 precedence left TIMES;
 precedence left UMINUS;
+precedence left AND;
+precedence left OR;
+precedence left ELSE;
+precedence left EXCLAMATION;
+
+
+
+
 
 start with program;
 
-program ::= expr:e
-            {: RESULT = new Program(e, loc(eleft, eright)); :}
+program ::= INT IDENT LPAREN INT IDENT:arg RPAREN  stmt:sl 
+            {: RESULT = new Program(arg, sl, loc(slleft, slright)); :}
+         
          ;
+
+stmtList ::= stmt:first  stmtList:rest
+            {: RESULT = new Stmtlist(first,rest,loc(firstleft,firstright)); :}
+         | 
+          {: RESULT = null; :}
+         ;
+         
+
+stmt ::= INT IDENT:var EQUALS expr:e SEMICOLON
+            {: RESULT = new ExecuStmt(var,e,ExecuStmt.DECLARE,loc(varleft,varright)); :}
+         |  IDENT:var EQUALS expr:e SEMICOLON
+            {: RESULT = new ExecuStmt(var,e,ExecuStmt.UPDATE,loc(varleft,varright)); :}
+         |  PRINT expr:e SEMICOLON
+            {: RESULT = new OutputStmt(e,OutputStmt.PRINT,loc(eleft,eright)); :}
+         |  RETURN expr:e SEMICOLON
+            {: RESULT = new OutputStmt(e,OutputStmt.RETURN,loc(eleft,eright)); :}
+         |  LCURLY stmtList:sl RCURLY
+            {: RESULT = sl; :}
+         |  IF  cond:c1   stmt:s1  
+            {: RESULT = new CondStmt(c1,CondStmt.IF,s1,loc(s1left,s1right)); :}
+         |  IF  cond:c1   stmt:s1  ELSE  stmt:s2  
+            {: RESULT = new CondStmt(c1,CondStmt.ELSE,s1,s2,loc(s1left,s1right)); :}
+             %prec ELSE
+   
+      ;
+
+cond ::= expr:e1 ELARGER expr:e2
+               {: RESULT = new CompareExpr(e1, CompareExpr.ELARGER, e2, loc(e1left, e1right)); :}
+            |  expr:e1 ESMALLER expr:e2
+               {: RESULT = new CompareExpr(e1, CompareExpr.ESMALLER, e2, loc(e1left, e1right)); :}
+            |  expr:e1 EQUAL expr:e2
+               {: RESULT = new CompareExpr(e1, CompareExpr.EQUAL, e2, loc(e1left, e1right)); :}
+            |  expr:e1 NOTEQAUL expr:e2
+               {: RESULT = new CompareExpr(e1, CompareExpr.NOTEQAUL, e2, loc(e1left, e1right)); :}
+            |  expr:e1 LARGER expr:e2
+               {: RESULT = new CompareExpr(e1, CompareExpr.LARGER, e2, loc(e1left, e1right)); :}
+            |  expr:e1 SMALLER expr:e2
+               {: RESULT = new CompareExpr(e1, CompareExpr.SMALLER, e2, loc(e1left, e1right)); :}
+            |   LPAREN cond:c RPAREN
+               {: RESULT = c; :}
+            |  EXCLAMATION  cond:c 
+               {: RESULT =  new NotCond(c,loc(cleft, cright)); :}
+            | operationCond:o
+               {: RESULT = o; :}
+            ;
+operationCond ::=   cond:c1 AND  cond:c2 
+                     {: RESULT =  new OperationCond(c1,OperationCond.AND,c2,loc(c1left, c1right)); :}
+                  |  cond:c1 OR  cond:c2 
+                     {: RESULT =  new OperationCond(c1,OperationCond.OR,c2,loc(c1left, c1right)); :}
+                  ;
+
+
 
 expr ::= INTCONST:c
          {: RESULT = new ConstExpr(c, loc(cleft, cright)); :}
+      |  IDENT:s
+         {: RESULT = new  IdentExpr(s, loc(sleft, sright)); :}
       |  binaryExpr:e
          {: RESULT = e; :}
       |  LPAREN expr:e RPAREN
-         {: RESULT = e; :}
-      |  RETURN expr:e SEMICOLON
          {: RESULT = e; :}
       |  MINUS expr:e
          {: RESULT = new UminusExpr(  e, loc(eleft, eright));  :}

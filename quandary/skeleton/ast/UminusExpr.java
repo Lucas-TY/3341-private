@@ -1,10 +1,8 @@
 package ast;
 
-public class UminusExpr extends Expr {
+import java.util.Map;
 
-    public static final int PLUS = 1;
-    public static final int MINUS = 2;
-    public static final int TIMES = 3;
+public class UminusExpr extends Expr {
 
     final Expr expr;
 
@@ -15,12 +13,13 @@ public class UminusExpr extends Expr {
 
     @Override
     public String toString() {
-        return "-" + " " + "(" + expr + ")";
+        return "-(" + expr + ")";
     }
 
     @Override
-    Object eval() {
-        return -(long) expr.eval();
+    public Qval eval(Map<String, Qtype> env) {
+        System.out.println("read :" + -expr.eval(env).value);
+        return new Qval((-expr.eval(env).value));
     }
 
 }

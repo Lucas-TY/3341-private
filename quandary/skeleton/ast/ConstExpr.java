@@ -1,12 +1,14 @@
 package ast;
 
+import java.util.Map;
+
 public class ConstExpr extends Expr {
 
-    final Object value;
+    final Qval value;
 
     public ConstExpr(long value, Location loc) {
         super(loc);
-        this.value = value;
+        this.value = new Qval(value);
     }
 
     @Override
@@ -15,7 +17,7 @@ public class ConstExpr extends Expr {
     }
 
     @Override
-    Object eval() {
+    public Qval eval(Map<String, Qtype> env) {
         return value;
     }
 }

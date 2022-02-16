@@ -53,21 +53,43 @@ IntLiteral = 0 | [1-9][0-9]*
 new_line = \r|\n|\r\n;
 
 white_space = {new_line} | [ \t\f]
-
+variable = [a-zA-Z_$][\w$]*
 %%
 
 <YYINITIAL>{
 /* int literals */
 {IntLiteral} { return symbol("Intconst", INTCONST, new Long(Long.parseLong(yytext()))); }
-/* return */
-"return"          {return symbol("return",RETURN);}
+
+
+/* simple */
+"return"          {return symbol("return", RETURN);}
+"print"           {return symbol("print", PRINT); }
+"if"             {return symbol("if",IF);}
+"else"             {return symbol("else", ELSE);}
+"int"             {return symbol("int", INT);}
 /* separators */
+"=="               { return symbol("==",  EQUAL); }
 "+"               { return symbol("+",  PLUS); }
 "-"               { return symbol("-",  MINUS); }
 "*"               { return symbol("*",  TIMES); }
 "("               { return symbol("(",  LPAREN); }
 ")"               { return symbol(")",  RPAREN); }
 ";"               { return symbol(";",  SEMICOLON); }
+"{"               { return symbol("{",  LCURLY); }
+"}"               { return symbol("}",  RCURLY); }
+">="               { return symbol(">=",  ELARGER); }
+"<="               { return symbol("<=",  ESMALLER); }
+"!="               { return symbol("!=",  NOTEQAUL); }
+">"               { return symbol(">",  LARGER); }
+"<"                {return symbol("<",  SMALLER);  }
+"&&"               { return symbol("&&",  AND); }
+"||"                {return symbol("||",  OR);  }
+"!"                {return symbol("!",  EXCLAMATION);  }
+"="                {return symbol("=",  EQUALS);  }
+/*IDENT*/
+{variable}   {return symbol("ident",IDENT,yytext()); }  
+
+
 
 /* comments */
 "/*" [^*] ~"*/" | "/*" "*"+ "/"

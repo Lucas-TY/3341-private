@@ -1,5 +1,7 @@
 package ast;
 
+import java.util.Map;
+
 public class BinaryExpr extends Expr {
 
     public static final int PLUS = 1;
@@ -39,20 +41,17 @@ public class BinaryExpr extends Expr {
     }
 
     @Override
-    Object eval() {
-        return doOperation(expr1.eval(), operator, expr2.eval());
-    }
-
-    static Object doOperation(Object value1, int operator, Object value2) {
+    public Qval eval(Map<String, Qtype> env) {
         switch (operator) {
             case PLUS:
-                return (long) value1 + (long) value2;
+                return Qval.plus(expr1.eval(env), expr2.eval(env));
             case MINUS:
-                return (long) value1 - (long) value2;
+                return Qval.minus(expr1.eval(env), expr2.eval(env));
             case TIMES:
-                return (long) value1 * (long) value2;
+                return Qval.times(expr1.eval(env), expr2.eval(env));
 
         }
         throw new RuntimeException("Unexpected in BinaryExpr.doOperation");
     }
+
 }

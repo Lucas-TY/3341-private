@@ -73,7 +73,7 @@ public class Interpreter {
         } catch (Exception ex) {
             Interpreter.fatalError("Uncaught parsing error: " + ex, Interpreter.EXIT_PARSING_ERROR);
         }
-        astRoot.println(System.out);
+        // astRoot.println(System.out);
         interpreter = new Interpreter(astRoot);
         Object returnValue = interpreter.exec(gcType, heapBytes, quandaryArg).toString();
         System.out.println("Interpreter returned " + returnValue);
@@ -89,11 +89,11 @@ public class Interpreter {
 
     Object exec(String gcType, long heapBytes, long arg) {
         if (gcType.equals("Explicit")) {
-            throw new RuntimeException("Explicit not implemented");            
+            throw new RuntimeException("Explicit not implemented");
         } else if (gcType.equals("MarkSweep")) {
-            throw new RuntimeException("MarkSweep not implemented");            
+            throw new RuntimeException("MarkSweep not implemented");
         } else if (gcType.equals("RefCount")) {
-            throw new RuntimeException("RefCount not implemented");            
+            throw new RuntimeException("RefCount not implemented");
         } else if (gcType.equals("NoGC")) {
             // Nothing to do
         }
@@ -101,8 +101,8 @@ public class Interpreter {
         return returnValue;
     }
 
-	public static void fatalError(String message, int processReturnCode) {
+    public static void fatalError(String message, int processReturnCode) {
         System.out.println(message);
         System.exit(processReturnCode);
-	}
+    }
 }
