@@ -5,7 +5,6 @@ import java.util.*;
 public class Stmtlist extends Stmt {
     final Stmtlist rest;
     final Stmt first;
-    Qtype result = null;
 
     public Stmtlist(Stmt first, Stmtlist stmtlist, Location loc) {
         super(loc);
@@ -14,12 +13,13 @@ public class Stmtlist extends Stmt {
 
     }
 
-    public Qtype execute(Map<String, Qtype> env) {
-        this.result = first.execute(env);
-        if (this.result != null) {
-            return this.result;
+    @Override
+    public Qtype execute(Map<String, Function> allFunc, Map<String, Qtype> env) {
+        Qtype result = first.execute(allFunc, env);
+        if (result != null) {
+            return result;
         } else if (this.rest != null) {
-            return rest.execute(env);
+            return rest.execute(allFunc, env);
         }
         return null;
 

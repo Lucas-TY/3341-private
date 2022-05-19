@@ -1,29 +1,43 @@
 package ast;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
-import java.util.AbstractQueue;
-import java.util.Map;
 
 public class Qval extends Qtype {
-    final Long value;
+    long value;
+    private final Lock Qlock = new ReentrantLock();
+
+
+
 
     public Qval(long value) {
         this.value = value;
     }
 
-    public boolean equals(Qtype compare, Map<String, Qtype> env) {
-        boolean result = false;
-        System.out.println("result: " + (this.value - compare.value(env)));
-        result = (this.value - compare.value(env) == 0);
-        return result;
+    public Qval() {
     }
 
-    public Long value(Map<String, Qtype> env) {
-        return this.value;
+    public long lock() {
+        while (!this.Qlock.tryLock()) {
+            System.out.println("waitting");
+        }
+        return 1;
+    }
+    public void unlock(){
+        this.Qlock.unlock();
     }
 
     @Override
     public String toString() {
-        return this.value.toString();
+        return Long.toString(value);
+    }
+
+    public Long value() {
+        return this.value;
+    }
+
+    public boolean equals(Qval q1) {
+        return this.value == q1.value;
     }
 
     public static Qval plus(Qval q1, Qval q2) {

@@ -1,10 +1,13 @@
 package ast;
+import java.util.concurrent.locks.Lock;
 
-import java.util.Map;
+
 
 public abstract class Qtype {
-
-    public abstract Long value(Map<String, Qtype> env);
+    long value;
 
     public abstract String toString();
+    public abstract long lock();
+    public abstract void unlock();
+    
 }

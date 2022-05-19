@@ -62,21 +62,31 @@ variable = [a-zA-Z_$][\w$]*
 
 
 /* simple */
+"nil"             {return symbol("nil",NIL);}
+"mutable"         {return symbol("mutable", MUTABLE); } 
 "return"          {return symbol("return", RETURN);}
 "print"           {return symbol("print", PRINT); }
-"if"             {return symbol("if",IF);}
+"if"                {return symbol("if",IF);}
+"while"             {return symbol("while",WHILE);}
 "else"             {return symbol("else", ELSE);}
-"int"             {return symbol("int", INT);}
+"int"             {return symbol("int", INT,yytext());}
+"Ref"             {return symbol("Ref", REF,yytext());}
+"Q"             {return symbol("Q", Q,yytext());}
 /* separators */
-"=="               { return symbol("==",  EQUAL); }
+","               { return symbol(",",  COMMA); }
+"."               { return symbol(".",  PERIOD); }
 "+"               { return symbol("+",  PLUS); }
 "-"               { return symbol("-",  MINUS); }
 "*"               { return symbol("*",  TIMES); }
+"["               { return symbol("[",  LBRACKET); }
+"]"               { return symbol("[",  RBRACKET); }
 "("               { return symbol("(",  LPAREN); }
 ")"               { return symbol(")",  RPAREN); }
 ";"               { return symbol(";",  SEMICOLON); }
 "{"               { return symbol("{",  LCURLY); }
 "}"               { return symbol("}",  RCURLY); }
+"="                {return symbol("=",  ASSIGN);  }
+"=="               { return symbol("==",  EQUAL); }
 ">="               { return symbol(">=",  ELARGER); }
 "<="               { return symbol("<=",  ESMALLER); }
 "!="               { return symbol("!=",  NOTEQAUL); }
@@ -84,8 +94,8 @@ variable = [a-zA-Z_$][\w$]*
 "<"                {return symbol("<",  SMALLER);  }
 "&&"               { return symbol("&&",  AND); }
 "||"                {return symbol("||",  OR);  }
-"!"                {return symbol("!",  EXCLAMATION);  }
-"="                {return symbol("=",  EQUALS);  }
+"!"                {return symbol("!",  NOT);  }
+
 /*IDENT*/
 {variable}   {return symbol("ident",IDENT,yytext()); }  
 

@@ -8,5 +8,5 @@ public abstract class Expr extends ASTNode {
         super(loc);
     }
 
-    abstract Qval eval(Map<String, Qtype> env);
+    abstract Qtype eval(Map<String, Function> allFunc, Map<String, Qtype> env);
 }

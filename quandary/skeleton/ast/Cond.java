@@ -8,5 +8,5 @@ public abstract class Cond extends ASTNode {
         super(loc);
     }
 
-    abstract boolean eval(Map<String, Qtype> env);
+    abstract boolean eval(Map<String, Function> allFunc, Map<String, Qtype> env);
 }

@@ -2,7 +2,7 @@ package ast;
 
 import java.util.Map;
 
-public class CompareExpr extends Cond {
+public class ConditionExpr extends Cond {
     public static final int ELARGER = 1;
     public static final int ESMALLER = 2;
     public static final int EQUAL = 3;
@@ -14,18 +14,19 @@ public class CompareExpr extends Cond {
     final int operator;
     final Expr expr2;
 
-    public CompareExpr(Expr expr1, int operator, Expr expr2, Location loc) {
+    public ConditionExpr(Expr expr1, int operator, Expr expr2, Location loc) {
         super(loc);
         this.expr1 = expr1;
         this.operator = operator;
         this.expr2 = expr2;
+
     }
 
-    public String toString(Map<String, Qtype> env) {
-        return "(" + simpleString(env) + ")";
+    public String toString(Map<String, Function> allFunc, Map<String, Qtype> env) {
+        return "(" + simpleString(allFunc, env) + ")";
     }
 
-    public String simpleString(Map<String, Qtype> env) {
+    public String simpleString(Map<String, Function> allFunc, Map<String, Qtype> env) {
         String s = null;
         switch (operator) {
             case ELARGER:
@@ -47,29 +48,31 @@ public class CompareExpr extends Cond {
                 s = "<";
                 break;
         }
-        return expr1.eval(env).value + " " + s + " " + expr2.eval(env).value;
+        return expr1.eval(allFunc, env).value + " " + s + " " + expr2.eval(allFunc, env).value;
     }
 
     @Override
-    public boolean eval(Map<String, Qtype> env) {
+    public boolean eval(Map<String, Function> allFunc, Map<String, Qtype> env) {
+        Qval left = (Qval) expr1.eval(allFunc, env);
+        Qval right = (Qval) expr2.eval(allFunc, env);
 
         switch (operator) {
             case ELARGER:
-                return Qval.minus(expr1.eval(env), expr2.eval(env)).value >= 0;
+                return left.value() >= right.value();
             case ESMALLER:
-                return Qval.minus(expr1.eval(env), expr2.eval(env)).value <= 0;
+                return left.value() <= right.value();
             case EQUAL:
-                return expr1.eval(env).value.equals(expr2.eval(env).value);
+                return (long) left.value() == (long) right.value();
             case NOTEQAUL:
-                return expr1.eval(env).value != expr2.eval(env).value;
+                return left.value() != right.value();
             case LARGER:
-                return expr1.eval(env).value > expr2.eval(env).value;
+                return left.value() > right.value();
 
             case SMALLER:
-                return expr1.eval(env).value < expr2.eval(env).value;
+                return left.value() < right.value();
 
         }
-        throw new RuntimeException("Unexpected in CompareExpr.doOperation");
+        throw new RuntimeException("Unexpected in ConditionExpr.doOperation");
     }
 
 }

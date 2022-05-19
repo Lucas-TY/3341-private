@@ -17,9 +17,9 @@ public class UminusExpr extends Expr {
     }
 
     @Override
-    public Qval eval(Map<String, Qtype> env) {
-        System.out.println("read :" + -expr.eval(env).value);
-        return new Qval((-expr.eval(env).value));
+    public Qtype eval(Map<String, Function> allFunc, Map<String, Qtype> env) {
+        Qval temp = (Qval) expr.eval(allFunc, env);
+        return new Qval(-(temp.value()));
     }
 
 }

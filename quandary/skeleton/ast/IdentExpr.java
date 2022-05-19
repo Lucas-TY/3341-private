@@ -3,15 +3,14 @@ package ast;
 import java.util.Map;
 
 public class IdentExpr extends Expr {
-    String name;
+    final String name;
 
     public IdentExpr(String name, Location loc) {
         super(loc);
         this.name = name;
     }
 
-    public Qval eval(Map<String, Qtype> env) {
-
-        return (Qval) env.get(this.name);
+    public Qtype eval(Map<String, Function> allFunc, Map<String, Qtype> env) {
+        return env.get(this.name);
     }
 }

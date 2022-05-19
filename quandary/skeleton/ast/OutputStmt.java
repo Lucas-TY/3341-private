@@ -16,13 +16,14 @@ public class OutputStmt extends Stmt {
     }
 
     @Override
-    public Qtype execute(Map<String, Qtype> env) {
+    public Qtype execute(Map<String, Function> allFunc, Map<String, Qtype> env) {
         switch (operator) {
             case PRINT:
-                System.out.println(this.expr.eval(env).toString());
+                System.out.println(this.expr.eval(allFunc, env).toString());
                 return null;
             case RETURN:
-                return this.expr.eval(env);
+
+                return this.expr.eval(allFunc, env);
 
         }
         return null;

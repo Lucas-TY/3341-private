@@ -7,6 +7,6 @@ public abstract class Stmt extends ASTNode {
         super(loc);
     }
 
-    abstract Qtype execute(Map<String, Qtype> env);
+    abstract Qtype execute(Map<String, Function> allFunc, Map<String, Qtype> env);
 
 }

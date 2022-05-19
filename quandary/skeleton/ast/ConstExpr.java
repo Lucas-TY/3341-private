@@ -17,7 +17,7 @@ public class ConstExpr extends Expr {
     }
 
     @Override
-    public Qval eval(Map<String, Qtype> env) {
+    public Qval eval(Map<String, Function> allFunc, Map<String, Qtype> env) {
         return value;
     }
 }

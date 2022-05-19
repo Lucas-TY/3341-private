@@ -2,7 +2,7 @@ package ast;
 
 import java.util.Map;
 
-public class OperationCond extends Cond {
+public class LogicCond extends Cond {
     public static final int AND = 1;
     public static final int OR = 2;
 
@@ -10,7 +10,7 @@ public class OperationCond extends Cond {
     final int operator;
     final Cond cond2;
 
-    public OperationCond(Cond cond1, int operator, Cond cond2, Location loc) {
+    public LogicCond(Cond cond1, int operator, Cond cond2, Location loc) {
         super(loc);
         this.cond1 = cond1;
         this.operator = operator;
@@ -37,12 +37,12 @@ public class OperationCond extends Cond {
     }
 
     @Override
-    public boolean eval(Map<String, Qtype> env) {
+    public boolean eval(Map<String, Function> allFunc, Map<String, Qtype> env) {
         switch (operator) {
             case AND:
-                return cond1.eval(env) && cond2.eval(env);
+                return cond1.eval(allFunc, env) && cond2.eval(allFunc, env);
             case OR:
-                return cond1.eval(env) || cond2.eval(env);
+                return cond1.eval(allFunc, env) || cond2.eval(allFunc, env);
         }
         throw new RuntimeException("Unexpected in BinaryExpr.doOperation");
     }

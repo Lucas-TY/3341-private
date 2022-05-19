@@ -7,6 +7,7 @@ public class BinaryExpr extends Expr {
     public static final int PLUS = 1;
     public static final int MINUS = 2;
     public static final int TIMES = 3;
+    public static final int REF = 4;
 
     final Expr expr1;
     final int operator;
@@ -41,14 +42,21 @@ public class BinaryExpr extends Expr {
     }
 
     @Override
-    public Qval eval(Map<String, Qtype> env) {
+    public Qtype eval(Map<String, Function> allFunc, Map<String, Qtype> env) {
+        long result;
+        Qval left = (Qval) expr1.eval(allFunc, env);
+        Qval right = (Qval) expr2.eval(allFunc, env);
         switch (operator) {
             case PLUS:
-                return Qval.plus(expr1.eval(env), expr2.eval(env));
+
+                result = left.value() + right.value();
+                return new Qval(result);
             case MINUS:
-                return Qval.minus(expr1.eval(env), expr2.eval(env));
+                result = left.value() - right.value();
+                return new Qval(result);
             case TIMES:
-                return Qval.times(expr1.eval(env), expr2.eval(env));
+                result = left.value() * right.value();
+                return new Qval(result);
 
         }
         throw new RuntimeException("Unexpected in BinaryExpr.doOperation");
